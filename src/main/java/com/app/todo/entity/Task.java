@@ -3,6 +3,7 @@ package com.app.todo.entity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
@@ -11,7 +12,6 @@ import java.sql.Timestamp;
 @Table(name = "task")
 @Getter
 @Setter
-@Builder
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,5 +25,4 @@ public class Task {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     private Status status;
-
 }

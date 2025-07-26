@@ -28,14 +28,29 @@ public class TaskService {
 
     @Transactional
     public void create(TaskDTO taskDTO) {
+        Task task = new Task();
         Status status = statusRepository.findByName(taskDTO.getStatus()).orElseThrow(RuntimeException::new);
         User user = userRepository.findByName(taskDTO.getUser()).orElseGet(() -> new User(taskDTO.getUser()));
-        taskRepository.save(Task.builder()
-                        .status(status)
-                        .user(user)
-                        .name(taskDTO.getName())
-                        .description(taskDTO.getDescription())
-                        .deadline(taskDTO.getDeadline())
-                .build());
+        task.setUser(user);
+        task.setName(taskDTO.getName());
+        task.setDeadline(taskDTO.getDeadline());
+        task.setStatus(status);
+        task.setDescription(taskDTO.getDescription());
+        taskRepository.save(task);
+    }
+    @Transactional
+    public void update(long id, TaskDTO taskDTO) {
+        Task task = taskRepository.findById(id).orElseThrow();
+        User user = userRepository.findByName(taskDTO.getUser()).orElseGet(() -> new User(taskDTO.getUser()));
+        Status status = statusRepository.findByName(taskDTO.getStatus()).orElseThrow(RuntimeException::new);
+        task.setUser(user);
+        task.setName(taskDTO.getName());
+        task.setDeadline(taskDTO.getDeadline());
+        task.setStatus(status);
+        task.setDescription(taskDTO.getDescription());
+    }
+
+    public void delete(long id) {
+        taskRepository.deleteById(id);
     }
 }

@@ -9,16 +9,26 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/api/task")
+@RequestMapping("/v1/api/tasks")
 public class TaskController {
     private final TaskService taskService;
-    @GetMapping("/list_tasks")
+    @GetMapping
     public List<TaskDTO> getListTasks() {
         return taskService.getAll();
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public void createTask(@RequestBody TaskDTO taskDTO) {
         taskService.create(taskDTO);
+    }
+
+    @PutMapping
+    public void updateTask(@RequestParam int id, @RequestBody TaskDTO taskDTO) {
+        taskService.update(id, taskDTO);
+    }
+
+    @DeleteMapping
+    public void deleteTask(@RequestParam int id) {
+        taskService.delete(id);
     }
 }
