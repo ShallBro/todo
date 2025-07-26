@@ -31,4 +31,14 @@ public class TaskController {
     public void deleteTask(@RequestParam int id) {
         taskService.delete(id);
     }
+
+    @GetMapping("/filter/status")
+    public List<TaskDTO> filterStatus(@RequestParam String name) {
+        return taskService.filterByStatus(name);
+    }
+
+    @GetMapping("/sorted/deadline")
+    public List<TaskDTO> sortByDeadline() {
+        return taskService.sortByDeadline();
+    }
 }

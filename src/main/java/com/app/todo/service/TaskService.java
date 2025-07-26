@@ -9,6 +9,7 @@ import com.app.todo.repository.StatusRepository;
 import com.app.todo.repository.TaskRepository;
 import com.app.todo.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import java.util.Comparator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ public class TaskService {
 
     private final UserRepository userRepository;
     private final TaskMapper taskMapper;
+
     public List<TaskDTO> getAll() {
         return taskMapper.toDTOList(taskRepository.findAll());
     }
@@ -48,6 +50,17 @@ public class TaskService {
         task.setDeadline(taskDTO.getDeadline());
         task.setStatus(status);
         task.setDescription(taskDTO.getDescription());
+    }
+
+    public List<TaskDTO> filterByStatus(String status) {
+        Status statusEntity = statusRepository.findByName(status).orElseThrow(RuntimeException::new);
+        return taskMapper.toDTOList(taskRepository.findByStatus(statusEntity));
+    }
+
+    public List<TaskDTO> sortByDeadline() {
+      return taskMapper.toDTOList(taskRepository.findAll()).stream()
+        .sorted(Comparator.comparing(TaskDTO::getDeadline).reversed())
+        .toList();
     }
 
     public void delete(long id) {
