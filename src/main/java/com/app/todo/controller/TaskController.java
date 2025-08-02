@@ -1,7 +1,9 @@
 package com.app.todo.controller;
 
 import com.app.todo.dto.TaskDTO;
+import com.app.todo.enums.Status;
 import com.app.todo.service.TaskService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,12 +20,12 @@ public class TaskController {
     }
 
     @PostMapping
-    public void createTask(@RequestBody TaskDTO taskDTO) {
+    public void createTask(@Valid @RequestBody TaskDTO taskDTO) {
         taskService.create(taskDTO);
     }
 
     @PutMapping
-    public void updateTask(@RequestParam int id, @RequestBody TaskDTO taskDTO) {
+    public void updateTask(@RequestParam int id, @Valid @RequestBody TaskDTO taskDTO) {
         taskService.update(id, taskDTO);
     }
 
@@ -33,12 +35,17 @@ public class TaskController {
     }
 
     @GetMapping("/filter/status")
-    public List<TaskDTO> filterStatus(@RequestParam String name) {
+    public List<TaskDTO> filterStatus(@RequestParam Status name) {
         return taskService.filterByStatus(name);
     }
 
     @GetMapping("/sorted/deadline")
     public List<TaskDTO> sortByDeadline() {
         return taskService.sortByDeadline();
+    }
+
+    @GetMapping("/sorted/status")
+    public List<TaskDTO> sortByStatus() {
+        return taskService.sortByStatus();
     }
 }

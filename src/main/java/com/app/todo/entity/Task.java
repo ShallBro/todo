@@ -1,12 +1,9 @@
 package com.app.todo.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
+import java.time.LocalDateTime;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.sql.Timestamp;
 
 @Entity
 @Table(name = "task")
@@ -21,8 +18,8 @@ public class Task {
     private User user;
     private String name;
     private String description;
-    private Timestamp deadline;
+    private LocalDateTime deadline;
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "status_id", referencedColumnName = "id")
-    private Status status;
+    private StatusEntity statusEntity;
 }

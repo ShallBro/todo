@@ -12,7 +12,7 @@ public interface TaskMapper {
     @Mapping(target = "name", source = "name")
     @Mapping(target = "deadline", source = "deadline")
     @Mapping(target = "description", source = "description")
-    @Mapping(target = "status", source = "status.name")
+    @Mapping(target = "status", source = "statusEntity.name")
     @Mapping(target = "user", source = "user.name")
     TaskDTO toDTO(Task task);
 
@@ -21,7 +21,7 @@ public interface TaskMapper {
     @Mapping(target = "name", source = "name")
     @Mapping(target = "deadline", source = "deadline")
     @Mapping(target = "description", source = "description")
-    @Mapping(target = "status.name", source = "status")
+    @Mapping(target = "statusEntity.name", source = "status")
     @Mapping(target = "user.name", source = "user")
     Task toEntity(TaskDTO taskDTO);
 

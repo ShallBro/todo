@@ -6,15 +6,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.app.todo.dto.TaskDTO;
-import com.app.todo.entity.Status;
+import com.app.todo.entity.StatusEntity;
 import com.app.todo.entity.Task;
 import com.app.todo.entity.User;
+import com.app.todo.enums.Status;
 import com.app.todo.mapper.TaskMapper;
 import com.app.todo.repository.StatusRepository;
 import com.app.todo.repository.TaskRepository;
 import com.app.todo.repository.UserRepository;
 import com.app.todo.service.TaskService;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,40 +64,40 @@ public class TaskServiceTest {
   void update() {
     TaskDTO dto = new TaskDTO();
     dto.setUser("Kolya");
-    dto.setStatus("todo");
+    dto.setStatus(com.app.todo.enums.Status.TODO);
     Task task = new Task();
     task.setUser(new User("Tema"));
-    task.setStatus(new Status("in progress"));
+    task.setStatusEntity(new StatusEntity("IN_PROGRESS"));
     long id = 1;
 
     when(taskRepository.findById(id)).thenReturn(Optional.of(task));
     when(userRepository.findByName(dto.getUser())).thenReturn(Optional.of(new User("Kolya")));
-    when(statusRepository.findByName(dto.getStatus())).thenReturn(Optional.of(new Status("todo")));
+    when(statusRepository.findByName(dto.getStatus().name())).thenReturn(Optional.of(new StatusEntity("TODO")));
 
     taskService.update(id, dto);
 
     assertEquals("Kolya", task.getUser().getName());
-    assertEquals("todo", task.getStatus().getName());
+    assertEquals("TODO", task.getStatusEntity().getName());
 
   }
 
   @Test
   void filterByStatus() {
     Task task1 = new Task();
-    task1.setStatus(new Status("todo"));
+    task1.setStatusEntity(new StatusEntity("TODO"));
     Task task2 = new Task();
-    task2.setStatus(new Status("in progress"));
+    task2.setStatusEntity(new StatusEntity("IN PROGRESS"));
     TaskDTO taskDTO = new TaskDTO();
-    taskDTO.setStatus("todo");
+    taskDTO.setStatus(Status.TODO);
     List<Task> tasks = List.of(task1, task2);
     List<TaskDTO> taskDTOS = List.of(taskDTO);
-    Status statusEntity = new Status("todo");
+    StatusEntity statusEntity = new StatusEntity("TODO");
 
-    when(statusRepository.findByName("todo")).thenReturn(Optional.of(statusEntity));
-    when(taskRepository.findByStatus(statusEntity)).thenReturn(tasks);
+    when(statusRepository.findByName("TODO")).thenReturn(Optional.of(statusEntity));
+    when(taskRepository.findByStatusEntity(statusEntity)).thenReturn(tasks);
     when(taskMapper.toDTOList(tasks)).thenReturn(taskDTOS);
 
-    List<TaskDTO> result = taskService.filterByStatus("todo");
+    List<TaskDTO> result = taskService.filterByStatus(Status.TODO);
 
     assertEquals(taskDTOS, result);
 
@@ -106,14 +106,14 @@ public class TaskServiceTest {
   @Test
   void create() {
     TaskDTO taskDTO = new TaskDTO();
-    taskDTO.setStatus("todo");
+    taskDTO.setStatus(Status.TODO);
     taskDTO.setUser("Artem");
-    Status statusEntity = new Status("todo");
+    StatusEntity statusEntity = new StatusEntity("TODO");
     Task task = new Task();
-    task.setStatus(new Status("todo"));
+    task.setStatusEntity(new StatusEntity("TODO"));
     task.setUser(new User("Artem"));
 
-    when(statusRepository.findByName("todo")).thenReturn(Optional.of(statusEntity));
+    when(statusRepository.findByName("TODO")).thenReturn(Optional.of(statusEntity));
     when(userRepository.findByName(taskDTO.getUser())).thenReturn(Optional.of(new User("Artem")));
     when(taskRepository.save(any(Task.class))).thenReturn(task);
 
@@ -125,11 +125,11 @@ public class TaskServiceTest {
   @Test
   void sortByDeadline() {
     TaskDTO t1 = new TaskDTO();
-    t1.setDeadline(Timestamp.valueOf(LocalDateTime.of(2025,1,1,10,0)));
+    t1.setDeadline(LocalDateTime.of(2025,1,1,10,0));
     TaskDTO t2 = new TaskDTO();
-    t2.setDeadline(Timestamp.valueOf(LocalDateTime.of(2025,1,1,12,0)));
+    t2.setDeadline(LocalDateTime.of(2025,1,1,12,0));
     TaskDTO t3 = new TaskDTO();
-    t3.setDeadline(Timestamp.valueOf(LocalDateTime.of(2025,1,1,8,0)));
+    t3.setDeadline(LocalDateTime.of(2025,1,1,8,0));
     List<TaskDTO> unsorted = List.of(t1, t2, t3);
     List<Task> entities = List.of(new Task(), new Task(), new Task());
 

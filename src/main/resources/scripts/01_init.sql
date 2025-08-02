@@ -3,7 +3,7 @@ create table todo.user (
                            name varchar(250) not null
 );
 
-create table todo.status (
+create table todo.statusEntity (
                              id serial primary key not null,
                              name varchar(250)
 );
@@ -14,12 +14,12 @@ create table todo.task (
                            name varchar(250),
                            description varchar,
                            deadline timestamp,
-                           status_id integer references todo.status
+                           status_id integer references todo.statusEntity
 );
 
 insert into todo."user" (name) values ('Artem');
 insert into todo."user" (name) values ('Vova');
 insert into todo."user" (name) values ('German');
-insert into todo.status (name) values ('todo');
-insert into todo.status (name) values ('in progress');
-insert into todo.status (name) values ('done');
+insert into todo.statusEntity (name) values ('TODO');
+insert into todo.statusEntity (name) values ('IN_PROGRESS');
+insert into todo.statusEntity (name) values ('DONE');
